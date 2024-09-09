@@ -25,7 +25,7 @@ jobs:
         run: npm update
 
       - name: Commit and create PR 🔀
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           title: 'Upgrade NPM packages (automated)'
           branch: 'build-deps-upgrade-npm-packages-automated'
