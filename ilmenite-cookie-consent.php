@@ -56,6 +56,13 @@ class Ilmenite_Cookie_Consent {
 	public $version = '3.3.0';
 
 	/**
+	 * The CSP nonce for inline scripts, generated once per request.
+	 *
+	 * @var string|null
+	 */
+	protected $csp_nonce = null;
+
+	/**
 	 * The single instance of the class
 	 *
 	 * @var Ilmenite_Cookie_Consent|null
@@ -161,6 +168,9 @@ class Ilmenite_Cookie_Consent {
 			return;
 		}
 
+		add_filter( 'script_loader_tag', [ $this, 'add_nonce_to_script_tag' ], 10, 2 );
+		add_filter( 'wp_inline_script_attributes', [ $this, 'add_nonce_to_inline_script' ] );
+
 		wp_register_script( 'ilmenite-cookie-consent', $this->plugin_url . '/assets/scripts/dist/cookie-banner.js', [ 'ilcc-vendor' ], $this->version, true );
 
 		wp_register_script( 'ilcc-vendor', $this->plugin_url . '/assets/scripts/dist/cookie-banner-vendor.js', [], $this->version, false );
@@ -208,6 +218,46 @@ class Ilmenite_Cookie_Consent {
 		// Finally, enqueue!
 		wp_enqueue_script( 'ilcc-vendor' );
 		wp_enqueue_script( 'ilmenite-cookie-consent' );
+	}
+
+	/**
+	 * Returns the CSP nonce for this request, generating one if needed.
+	 *
+	 * Hook 'ilcc_csp_nonce' to supply an externally-generated nonce (e.g. from a
+	 * CSP plugin) so the same value ends up in both the CSP header and script tags.
+	 *
+	 * @return string
+	 */
+	public function get_csp_nonce() {
+		if ( null === $this->csp_nonce ) {
+			$this->csp_nonce = apply_filters( 'ilcc_csp_nonce', bin2hex( random_bytes( 16 ) ) );
+		}
+		return $this->csp_nonce;
+	}
+
+	/**
+	 * Adds nonce attribute to the plugin's external <script src> tags.
+	 *
+	 * @param string $tag    The full script tag HTML.
+	 * @param string $handle The script handle.
+	 * @return string
+	 */
+	public function add_nonce_to_script_tag( $tag, $handle ) {
+		if ( ! in_array( $handle, [ 'ilmenite-cookie-consent', 'ilcc-vendor' ], true ) ) {
+			return $tag;
+		}
+		return str_replace( '<script ', '<script nonce="' . esc_attr( $this->get_csp_nonce() ) . '" ', $tag );
+	}
+
+	/**
+	 * Adds nonce attribute to inline <script> blocks (WordPress 6.3+).
+	 *
+	 * @param array $attributes Script element attributes.
+	 * @return array
+	 */
+	public function add_nonce_to_inline_script( $attributes ) {
+		$attributes['nonce'] = $this->get_csp_nonce();
+		return $attributes;
 	}
 
 	/**
