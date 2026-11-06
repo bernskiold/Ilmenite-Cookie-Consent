@@ -127,6 +127,7 @@ class Ilmenite_Cookie_Consent {
 		// Boot other classes.
 		ILCC_Settings::hooks();
 		ILCC_Consent::hooks();
+		ILCC_Trackers::hooks();
 
 		do_action( 'ilcc_init' );
 	}
@@ -206,9 +207,10 @@ class Ilmenite_Cookie_Consent {
 		] );
 
 		/**
-		 * Add the whitelist and blacklist.
+		 * Configure the script blocker. The lists are built in the browser
+		 * from the consent cookie so that the page is cache-safe.
 		 */
-		wp_add_inline_script( 'ilcc-vendor', $this->get_allow_and_disallowlists(), 'before' );
+		wp_add_inline_script( 'ilcc-vendor', ILCC_Trackers::get_blocker_script(), 'before' );
 
 		/**
 		 * Add consent mode defaults.
@@ -261,18 +263,14 @@ class Ilmenite_Cookie_Consent {
 	}
 
 	/**
-	 * Get the black- and whitelist HTML.
+	 * Get the script that configures the script blocker.
+	 *
+	 * @deprecated 3.4.0 Use ILCC_Trackers::get_blocker_script().
 	 *
 	 * @return string
 	 */
 	public function get_allow_and_disallowlists() {
-		$output = "window.YETT_BLACKLIST = [" . esc_js( ILCC_Trackers::get_disallow_for_js() ) . "];\n";
-
-		if ( ! empty( ILCC_Trackers::get_allowlist_for_js() ) ) {
-			$output .= 'window.YETT_WHITELIST = [' . esc_js( ILCC_Trackers::get_allowlist_for_js() ) . '];';
-		}
-
-		return $output;
+		return ILCC_Trackers::get_blocker_script();
 	}
 
 	/**

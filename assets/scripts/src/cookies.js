@@ -22,7 +22,13 @@ export function getCookieValue( name ) {
 		}
 
 		if ( cookie.indexOf( nameEQ ) === 0 ) {
-			return cookie.substring( nameEQ.length, cookie.length );
+			const value = cookie.substring( nameEQ.length, cookie.length );
+
+			try {
+				return decodeURIComponent( value );
+			} catch ( e ) {
+				return value;
+			}
 		}
 	}
 
@@ -32,11 +38,24 @@ export function getCookieValue( name ) {
 /**
  * Get cookie value that is expected to be JSON.
  *
+ * Returns null if the cookie is missing or not valid JSON, so that a
+ * malformed cookie can never stop the banner from working.
+ *
  * @param {string} name
- * @return {any} Array value.
+ * @return {any} Parsed value or null.
  */
 export function getJsonCookieValue( name ) {
-	return JSON.parse( getCookieValue( name ) );
+	const value = getCookieValue( name );
+
+	if ( null === value ) {
+		return null;
+	}
+
+	try {
+		return JSON.parse( value );
+	} catch ( e ) {
+		return null;
+	}
 }
 
 /**
@@ -60,7 +79,13 @@ export function setCookie( name, value ) {
 	const date = new Date();
 	date.setTime( date.getTime() + convertDaysToMilliseconds( settings.consentRememberDuration ) );
 
-	document.cookie = name + '=' + value + '; expires=' + date.toUTCString() + '; path=/';
+	let cookie = name + '=' + encodeURIComponent( value ) + '; expires=' + date.toUTCString() + '; path=/; SameSite=Lax';
+
+	if ( 'https:' === window.location.protocol ) {
+		cookie += '; Secure';
+	}
+
+	document.cookie = cookie;
 }
 
 /**
