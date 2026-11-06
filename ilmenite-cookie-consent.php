@@ -261,18 +261,65 @@ class Ilmenite_Cookie_Consent {
 	}
 
 	/**
-	 * Get the black- and whitelist HTML.
+	 * Get the black- and whitelist script.
+	 *
+	 * The script contains every tracker domain and decides in the browser,
+	 * from the visitor's consent cookie, which ones to block. The output is
+	 * the same for every visitor, so pages stay safe to cache: one visitor's
+	 * consent is never baked into the HTML served to the next.
 	 *
 	 * @return string
 	 */
 	public function get_allow_and_disallowlists() {
-		$output = "window.YETT_BLACKLIST = [" . esc_js( ILCC_Trackers::get_disallow_for_js() ) . "];\n";
+		$cookie_name = wp_json_encode( self::get_categories_cookie_name() . '=', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
 
-		if ( ! empty( ILCC_Trackers::get_allowlist_for_js() ) ) {
-			$output .= 'window.YETT_WHITELIST = [' . esc_js( ILCC_Trackers::get_allowlist_for_js() ) . '];';
+		$necessary = esc_js( ILCC_Trackers::get_domains_for_js( ILCC_Trackers::get_necessary() ) );
+		$marketing = esc_js( ILCC_Trackers::get_domains_for_js( ILCC_Trackers::get_marketing() ) );
+		$analytics = esc_js( ILCC_Trackers::get_domains_for_js( ILCC_Trackers::get_analytics() ) );
+
+		return <<<JS
+(function () {
+	var domains = { marketing: [{$marketing}], analytics: [{$analytics}] };
+	var allowlist = [{$necessary}];
+	var disallowlist = [];
+	var consented = [];
+	var cookieName = {$cookie_name};
+	var cookies = document.cookie.split( ";" );
+
+	for ( var i = 0; i < cookies.length; i++ ) {
+		var cookie = cookies[ i ].replace( /^\s+/, "" );
+
+		if ( 0 === cookie.indexOf( cookieName ) ) {
+			var value = cookie.substring( cookieName.length );
+
+			try {
+				consented = JSON.parse( value );
+			} catch ( e ) {
+				try {
+					consented = JSON.parse( decodeURIComponent( value ) );
+				} catch ( e2 ) {
+					consented = [];
+				}
+			}
 		}
+	}
 
-		return $output;
+	if ( ! ( consented instanceof Array ) ) {
+		consented = [];
+	}
+
+	[ "marketing", "analytics" ].forEach( function ( category ) {
+		var target = -1 === consented.indexOf( category ) ? disallowlist : allowlist;
+		target.push.apply( target, domains[ category ] );
+	} );
+
+	window.YETT_BLACKLIST = disallowlist;
+
+	if ( allowlist.length ) {
+		window.YETT_WHITELIST = allowlist;
+	}
+})();
+JS;
 	}
 
 	/**

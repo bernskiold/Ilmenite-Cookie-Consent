@@ -95,6 +95,25 @@ class ILCC_Trackers {
 	}
 
 	/**
+	 * Format a list of domains as JavaScript regular expression literals.
+	 *
+	 * @param  array  $domains
+	 *
+	 * @return string
+	 */
+	public static function get_domains_for_js( $domains ) {
+		$patterns = [];
+
+		foreach ( (array) $domains as $domain ) {
+			if ( ! empty( $domain ) ) {
+				$patterns[] = '/' . addslashes( $domain ) . '/';
+			}
+		}
+
+		return implode( ',', $patterns );
+	}
+
+	/**
 	 * Get Whitelist for use in JavaScript
 	 *
 	 * @return string
