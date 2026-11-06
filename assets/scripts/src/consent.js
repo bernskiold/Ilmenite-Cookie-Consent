@@ -2,7 +2,7 @@
  * Internal dependencies
  */
 import { getCookieValue, getJsonCookieValue, setCookie } from "./cookies";
-import { hasMatomo, settings } from "./settings";
+import { getConsentVersion, hasMatomo, settings } from "./settings";
 import { updateConsentMode } from "./consent-mode";
 
 /**
@@ -11,7 +11,7 @@ import { updateConsentMode } from "./consent-mode";
  * @param {boolean} hasSet If preference has been stored.
  */
 export function setHasSetPreferences( hasSet = true ) {
-	let value = "1";
+	let value = getConsentVersion();
 
 	if ( ! hasSet ) {
 		value = "0";
@@ -70,7 +70,7 @@ export function hasConsentedTo( category ) {
  * @return {boolean} Prefs set or not.
  */
 export function hasUserSetPreferences() {
-	return "1" === getCookieValue( settings.setPreferencesCookieName );
+	return getConsentVersion() === getCookieValue( settings.setPreferencesCookieName );
 }
 
 /**

@@ -5,6 +5,34 @@ class ILCC_Consent {
 	public static function hooks() {
 		// Print as early as possible so the defaults are set before any Google tag loads.
 		add_action( 'wp_head', [ self::class, 'print_consent_mode_script' ], 1 );
+
+		add_shortcode( 'ilcc_settings_link', [ self::class, 'settings_link_shortcode' ] );
+	}
+
+	/**
+	 * Shortcode: a link that opens the cookie settings.
+	 *
+	 * Lets visitors change or withdraw their consent at any time, e.g. from
+	 * the footer or the cookie policy page. Usage: [ilcc_settings_link text="Cookie settings"]
+	 *
+	 * Any element with a data-ilcc-open-settings attribute, or a link to
+	 * #ilcc-settings (such as a custom menu item), works the same way.
+	 *
+	 * @param  array|string  $atts
+	 *
+	 * @return string
+	 */
+	public static function settings_link_shortcode( $atts ) {
+		$atts = shortcode_atts( [
+			'text'  => __( 'Cookie settings', 'ilmenite-cookie-consent' ),
+			'class' => '',
+		], $atts, 'ilcc_settings_link' );
+
+		return sprintf(
+			'<a href="#ilcc-settings" class="%s" data-ilcc-open-settings>%s</a>',
+			esc_attr( trim( 'ilcc-settings-link ' . $atts['class'] ) ),
+			esc_html( $atts['text'] )
+		);
 	}
 
 	/**
@@ -19,7 +47,7 @@ class ILCC_Consent {
 			return false;
 		}
 
-		return '1' === $_COOKIE[ $name ];
+		return Ilmenite_Cookie_Consent::get_consent_version() === wp_unslash( $_COOKIE[ $name ] );
 	}
 
 	/**
@@ -122,6 +150,7 @@ class ILCC_Consent {
 		$config = wp_json_encode( [
 			'preferencesCookieName'         => Ilmenite_Cookie_Consent::get_preferences_cookie_name(),
 			'consentedCategoriesCookieName' => Ilmenite_Cookie_Consent::get_categories_cookie_name(),
+			'consentVersion'                => Ilmenite_Cookie_Consent::get_consent_version(),
 		] );
 
 		$script .= <<<JS
@@ -137,7 +166,7 @@ class ILCC_Consent {
 		}
 		return null;
 	}
-	if (readCookie(config.preferencesCookieName) !== '1') {
+	if (readCookie(config.preferencesCookieName) !== config.consentVersion) {
 		return;
 	}
 	var categories = [];

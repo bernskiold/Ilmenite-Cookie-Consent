@@ -52,10 +52,14 @@ export function removeBanner() {
 	document.body.classList.add( "ilcc-banner-closed" );
 
 	setTimeout( () => {
-		maybeRemoveClasses( document.body, [
-			"has-ilcc-banner"
-		] );
 		consentNotice.remove();
+
+		// The banner may have been opened again in the meantime.
+		if ( ! document.querySelector( ".js--ilcc-cookie-consent-notice" ) ) {
+			maybeRemoveClasses( document.body, [
+				"has-ilcc-banner"
+			] );
+		}
 	}, 750 );
 }
 
