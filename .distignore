@@ -17,6 +17,7 @@
 .travis.yml
 mix-manifest.json
 phpcs.xml
+phpcs.xml.dist
 phpunit.xml.dist
 webpack.mix.js
 README.md
