@@ -5,6 +5,9 @@
 /vendor
 /assets/scripts/src
 /assets/styles/src
+/tests
+/test-results
+/playwright-report
 
 .distignore
 .gitignore

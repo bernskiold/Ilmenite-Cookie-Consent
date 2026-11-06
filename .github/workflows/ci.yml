@@ -54,3 +54,52 @@ jobs:
           coverage: none
       - run: composer install --no-interaction --no-progress
       - run: composer lint
+
+  php-unit:
+    name: PHP ${{ matrix.php }} unit tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.2', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4' ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - run: composer install --no-interaction --no-progress
+      - run: composer test
+
+  e2e:
+    name: WordPress ${{ matrix.wp }} / PHP ${{ matrix.php }} end-to-end
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Latest WordPress on the default and newest PHP.
+          - { wp: latest, php: '8.3' }
+          - { wp: latest, php: '8.4' }
+          # Oldest WordPress the plugin supports ("Requires at least" in readme.txt),
+          # on the oldest PHP WordPress Playground offers.
+          - { wp: '5.0', php: '7.4' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          WP_VERSION: ${{ matrix.wp }}
+          PHP_VERSION: ${{ matrix.php }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-results-wp${{ matrix.wp }}-php${{ matrix.php }}
+          path: test-results/
+          retention-days: 7

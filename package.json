@@ -10,7 +10,10 @@
     "watch": "mix watch",
     "production": "mix --production",
     "i18n": "npm run i18n:pot",
-    "i18n:pot": "npm run build && wp i18n make-pot . ./languages/ilmenite-cookie-consent.pot --include=\"dist/,src/,blocks/*.json,\""
+    "i18n:pot": "npm run build && wp i18n make-pot . ./languages/ilmenite-cookie-consent.pot --include=\"dist/,src/,blocks/*.json,\"",
+    "test": "npm run test:php && npm run test:e2e",
+    "test:php": "composer test",
+    "test:e2e": "playwright test --config tests/e2e/playwright.config.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +38,8 @@
   },
   "homepage": "https://github.com/bernskiold/Ilmenite-Cookie-Consent#readme",
   "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@wp-playground/cli": "3.1.62",
     "laravel-mix": "^6.0.41",
     "postcss-preset-env": "^7.2",
     "sass": "^1.107.0",
