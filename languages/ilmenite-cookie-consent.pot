@@ -44,7 +44,7 @@ msgid "Necessary"
 msgstr ""
 
 #: classes/class-settings.php:140 classes/class-settings.php:434
-msgid "These cookies cannot be disabled. They are requires for the website to work."
+msgid "These cookies cannot be disabled. They are required for the website to work."
 msgstr ""
 
 #: classes/class-settings.php:151 classes/class-settings.php:488
@@ -329,4 +329,14 @@ msgstr ""
 
 #. Author URI of the plugin/theme
 msgid "http://www.bernskioldmedia.com/"
+msgstr ""
+#: classes/class-settings.php
+msgid "Integrations"
+msgstr ""
+
+#: classes/class-settings.php
+msgid ""
+"Analytics cookies measure how visitors use the website, such as which pages "
+"they visit and for how long. Many privacy regulations require consent before "
+"these are set."
 msgstr ""

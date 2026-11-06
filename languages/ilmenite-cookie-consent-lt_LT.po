@@ -51,7 +51,7 @@ msgstr "Būtini"
 
 #: classes/class-settings.php:140 classes/class-settings.php:434
 msgid ""
-"These cookies cannot be disabled. They are requires for the website to work."
+"These cookies cannot be disabled. They are required for the website to work."
 msgstr ""
 "Kad svetainę būtų lengviau naudoti, būtinais slapukais aktyvinamos "
 "pagrindinės funkcijos, pavyzdžiui, naršymo puslapiuose ir prieigos prie "

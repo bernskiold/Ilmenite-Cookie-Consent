@@ -50,7 +50,7 @@ msgstr "Nødvendigt"
 
 #: classes/class-settings.php:140 classes/class-settings.php:434
 msgid ""
-"These cookies cannot be disabled. They are requires for the website to work."
+"These cookies cannot be disabled. They are required for the website to work."
 msgstr ""
 "Disse cookies kan ikke deaktiveres. De er nødvendige for, at hjemmesiden kan "
 "fungere."
