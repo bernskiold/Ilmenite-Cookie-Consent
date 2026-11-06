@@ -211,7 +211,7 @@ msgid "Marketing"
 msgstr "Marketing"
 
 #: classes/class-settings.php:138 classes/class-settings.php:477
-msgid "These cookies cannot be disabled. They are requires for the website to work."
+msgid "These cookies cannot be disabled. They are required for the website to work."
 msgstr "Αυτά τα cookies δεν μπορούν να απενεργοποιηθούν. Απαιτούνται για να λειτουργήσει ο ιστότοπος."
 
 #: classes/class-settings.php:127 classes/class-settings.php:460

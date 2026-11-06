@@ -12,6 +12,54 @@ class ILCC_Settings {
 	}
 
 	/**
+	 * Get the default value of a text option.
+	 *
+	 * Used by both the getters and the Customizer, so what the Customizer
+	 * shows is what visitors see.
+	 *
+	 * @param  string  $option  Option name.
+	 *
+	 * @return string
+	 */
+	public static function get_default( $option ) {
+		switch ( $option ) {
+			case 'ilcc_title':
+				return __( 'This website uses cookies', 'ilmenite-cookie-consent' );
+			case 'ilcc_text':
+				/* translators: 1. Policy URL */
+				return sprintf( __( 'We use cookies to analyze our traffic, personalize marketing and to provide social media features. <a href="%s" rel="nofollow">Privacy and cookies policy ›</a>.', 'ilmenite-cookie-consent' ), self::get_policy_url() );
+			case 'ilcc_button':
+				return __( 'Allow All Cookies', 'ilmenite-cookie-consent' );
+			case 'ilcc_only_necessary_text':
+				return __( 'Only Necessary', 'ilmenite-cookie-consent' );
+			case 'ilcc_configure_settings_text':
+				return __( 'Configure Settings', 'ilmenite-cookie-consent' );
+			case 'ilcc_style':
+				return 'overlay';
+			case 'ilcc_settings_title':
+				return __( 'Select Cookies', 'ilmenite-cookie-consent' );
+			case 'ilcc_settings_description':
+				return __( 'Cookies are small text files that the web server stores on your computer when you visit the website.', 'ilmenite-cookie-consent' );
+			case 'ilcc_settings_necessary_heading':
+				return __( 'Necessary', 'ilmenite-cookie-consent' );
+			case 'ilcc_settings_necessary_description':
+				return __( 'These cookies cannot be disabled. They are required for the website to work.', 'ilmenite-cookie-consent' );
+			case 'ilcc_settings_analytics_heading':
+				return __( 'Analytics', 'ilmenite-cookie-consent' );
+			case 'ilcc_settings_analytics_description':
+				return __( 'To be able to improve the website including information and functionality we want to gather analytics. We are not able to identify you personally using this data.', 'ilmenite-cookie-consent' );
+			case 'ilcc_settings_marketing_heading':
+				return __( 'Marketing', 'ilmenite-cookie-consent' );
+			case 'ilcc_settings_marketing_description':
+				return __( 'By sharing your browsing behavior on our website we are able to serve you with personalized content and offers.', 'ilmenite-cookie-consent' );
+			case 'ilcc_save_settings_text':
+				return __( 'Save Settings', 'ilmenite-cookie-consent' );
+		}
+
+		return '';
+	}
+
+	/**
 	 * Get the Policy URL from the settings.
 	 *
 	 * @return string
@@ -32,7 +80,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_consent_title() {
-		$title = get_option( 'ilcc_title', __( 'This website uses cookies', 'ilmenite-cookie-consent' ) );
+		$title = get_option( 'ilcc_title', self::get_default( 'ilcc_title' ) );
 
 		return apply_filters( 'ilcc_consent_title', $title );
 	}
@@ -46,10 +94,7 @@ class ILCC_Settings {
 
 		$policy_url = self::get_policy_url();
 
-		/* translators: 1. Policy URL */
-		$default_text = sprintf( __( 'We use cookies to analyze our traffic, personalize marketing and to provide social media features. <a href="%s" rel="nofollow">Privacy and cookies policy ›</a>.', 'ilmenite-cookie-consent' ), $policy_url );
-
-		$text = get_option( 'ilcc_text', $default_text );
+		$text = get_option( 'ilcc_text', self::get_default( 'ilcc_text' ) );
 
 		// check if we have linkstart and linkend, replace with link
 		if ( strpos( $text, '%linkstart%' ) !== false && strpos( $text, '%linkend%' ) !== false ) {
@@ -80,7 +125,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_accept_text() {
-		$text = get_option( 'ilcc_button', __( 'Allow All Cookies', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_button', self::get_default( 'ilcc_button' ) );
 
 		return apply_filters( 'ilcc_accept_text', $text );
 	}
@@ -91,7 +136,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_only_necessary_text() {
-		$text = get_option( 'ilcc_only_necessary_text', __( 'Only Necessary', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_only_necessary_text', self::get_default( 'ilcc_only_necessary_text' ) );
 
 		return apply_filters( 'ilcc_only_necessary_text', $text );
 	}
@@ -102,7 +147,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_configure_settings_text() {
-		$text = get_option( 'ilcc_configure_settings_text', __( 'Configure Settings', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_configure_settings_text', self::get_default( 'ilcc_configure_settings_text' ) );
 
 		return apply_filters( 'ilcc_configure_settings_text', $text );
 	}
@@ -113,7 +158,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_style() {
-		$style = get_option( 'ilcc_style', 'overlay' );
+		$style = get_option( 'ilcc_style', self::get_default( 'ilcc_style' ) );
 
 		return apply_filters( 'ilcc_style', $style );
 	}
@@ -124,7 +169,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_necessary_heading() {
-		$text = get_option( 'ilcc_settings_necessary_heading', __( 'Necessary', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_settings_necessary_heading', self::get_default( 'ilcc_settings_necessary_heading' ) );
 
 		return apply_filters( 'ilcc_settings_necessary_heading', $text );
 	}
@@ -135,7 +180,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_necessary_description() {
-		$text = get_option( 'ilcc_settings_necessary_description', __( 'These cookies cannot be disabled. They are requires for the website to work.', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_settings_necessary_description', self::get_default( 'ilcc_settings_necessary_description' ) );
 
 		return apply_filters( 'ilcc_settings_necessary_description', $text );
 	}
@@ -146,7 +191,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_marketing_heading() {
-		$text = get_option( 'ilcc_settings_marketing_heading', __( 'Marketing', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_settings_marketing_heading', self::get_default( 'ilcc_settings_marketing_heading' ) );
 
 		return apply_filters( 'ilcc_settings_marketing_heading', $text );
 	}
@@ -157,7 +202,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_marketing_description() {
-		$text = get_option( 'ilcc_settings_marketing_description', __( 'By sharing your browsing behavior on our website we are able to serve you with personalized content and offers.', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_settings_marketing_description', self::get_default( 'ilcc_settings_marketing_description' ) );
 
 		return apply_filters( 'ilcc_settings_marketing_description', $text );
 	}
@@ -168,7 +213,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_analytics_heading() {
-		$text = get_option( 'ilcc_settings_analytics_heading', __( 'Analytics', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_settings_analytics_heading', self::get_default( 'ilcc_settings_analytics_heading' ) );
 
 		return apply_filters( 'ilcc_settings_analytics_heading', $text );
 	}
@@ -179,9 +224,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_analytics_description() {
-		$default = __( 'To be able to improve the website including information and functionality we want to gather analytics. We are not able to identify you personally using this data.', 'ilmenite-cookie-consent' );
-
-		$text = get_option( 'ilcc_settings_analytics_description', $default );
+		$text = get_option( 'ilcc_settings_analytics_description', self::get_default( 'ilcc_settings_analytics_description' ) );
 
 		return apply_filters( 'ilcc_settings_analytics_description', $text );
 	}
@@ -192,7 +235,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_save_settings_button_title() {
-		$text = get_option( 'ilcc_save_settings_text', __( 'Save Settings', 'ilmenite-cookie-consent' ) );
+		$text = get_option( 'ilcc_save_settings_text', self::get_default( 'ilcc_save_settings_text' ) );
 
 		return apply_filters( 'ilcc_save_settings_text', $text );
 	}
@@ -203,7 +246,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_title() {
-		$accept = get_option( 'ilcc_settings_title', __( 'Select Cookies', 'ilmenite-cookie-consent' ) );
+		$accept = get_option( 'ilcc_settings_title', self::get_default( 'ilcc_settings_title' ) );
 
 		return apply_filters( 'ilcc_settings_title', $accept );
 	}
@@ -214,8 +257,7 @@ class ILCC_Settings {
 	 * @return string
 	 */
 	public static function get_settings_description() {
-		$default = __( 'Cookies are small text files that the web server stores on your computer when you visit the website.', 'ilmenite-cookie-consent' );
-		$text    = get_option( 'ilcc_settings_description', $default );
+		$text = get_option( 'ilcc_settings_description', self::get_default( 'ilcc_settings_description' ) );
 
 		return apply_filters( 'ilcc_settings_description', $text );
 	}
@@ -258,7 +300,193 @@ class ILCC_Settings {
 	}
 
 	/**
-	 * Add settings in the customer.
+	 * Get the Customizer sections, keyed by ID.
+	 *
+	 * @return array
+	 */
+	protected static function get_customizer_sections() {
+		return [
+			'ilmenite_cookie_banner_style'        => __( 'Style', 'ilmenite-cookie-consent' ),
+			'ilmenite_cookie_banner_general'      => __( 'General', 'ilmenite-cookie-consent' ),
+			'ilmenite_cookie_banner_necessary'    => __( 'Section: Necessary', 'ilmenite-cookie-consent' ),
+			'ilmenite_cookie_banner_analytics'    => __( 'Section: Analytics', 'ilmenite-cookie-consent' ),
+			'ilmenite_cookie_banner_marketing'    => __( 'Section: Marketing', 'ilmenite-cookie-consent' ),
+			'ilmenite_cookie_banner_integrations' => __( 'Integrations', 'ilmenite-cookie-consent' ),
+		];
+	}
+
+	/**
+	 * Get the Customizer fields, in display order.
+	 *
+	 * Each field is stored as an option with the same name.
+	 *
+	 * @return array
+	 */
+	protected static function get_customizer_fields() {
+		return [
+			'ilcc_style'                                => [
+				'section'     => 'ilmenite_cookie_banner_style',
+				'capability'  => 'ilcc_edit_style_capability',
+				'type'        => 'radio',
+				'label'       => __( 'Style', 'ilmenite-cookie-consent' ),
+				'description' => __( 'The banner can appear both at the top, or overlaid at the bottom of the page.', 'ilmenite-cookie-consent' ),
+				'choices'     => self::get_style_choices(),
+				'sanitize'    => [ self::class, 'sanitize_style' ],
+			],
+			'ilcc_title'                                => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'capability'  => 'ilcc_edit_title_capability',
+				'label'       => __( 'Title', 'ilmenite-cookie-consent' ),
+				'description' => __( 'Keep the title short. It is styled prominently.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => 'sanitize_text_field',
+			],
+			'ilcc_text'                                 => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'capability'  => 'ilcc_edit_text_capability',
+				'type'        => 'textarea',
+				'label'       => __( 'Description', 'ilmenite-cookie-consent' ),
+				'description' => __( 'A secondary line of info about your cookie usage. Remember to link to the policy by using the %linkstart% and %linkend% placeholders.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => 'wp_kses_post',
+			],
+			'ilcc_policy_url'                           => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'capability'  => 'ilcc_edit_policy_url_capability',
+				'default'     => get_privacy_policy_url(),
+				'label'       => __( 'Cookie Policy Link', 'ilmenite-cookie-consent' ),
+				'description' => __( 'Enter a link to your privacy and cookie policy where you outline the use of cookies. If left blank, the privacy policy page from Settings > Privacy will be used.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => 'esc_url_raw',
+			],
+			'ilcc_button'                               => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'label'       => __( 'Accept All Button Text', 'ilmenite-cookie-consent' ),
+				'description' => __( 'Displays the message on the call to action button that adds consent for everything.', 'ilmenite-cookie-consent' ),
+			],
+			'ilcc_only_necessary_text'                  => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'label'       => __( 'Only Necessary Cookies Button Text', 'ilmenite-cookie-consent' ),
+				'description' => __( 'A secondary button that displays a call to action where the user can accept only the necessary cookies on the page. This essentially just closes the banner.', 'ilmenite-cookie-consent' ),
+			],
+			'ilcc_configure_settings_text'              => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'label'       => __( 'Configure Settings Button Text', 'ilmenite-cookie-consent' ),
+				'description' => __( 'A small button/link that the user can click on to open more fine-grained settings.', 'ilmenite-cookie-consent' ),
+			],
+			'ilcc_settings_title'                       => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'label'       => __( 'Settings Title', 'ilmenite-cookie-consent' ),
+				'description' => __( 'The title for the settings selection area.', 'ilmenite-cookie-consent' ),
+			],
+			'ilcc_settings_description'                 => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'label'       => __( 'Settings Description', 'ilmenite-cookie-consent' ),
+				'description' => __( 'A description to further let people know what cookies are for and why they can select different options.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => 'wp_kses_post',
+			],
+			'ilcc_settings_necessary_heading'           => [
+				'section'     => 'ilmenite_cookie_banner_necessary',
+				'label'       => __( 'Necessary Heading', 'ilmenite-cookie-consent' ),
+				'description' => __( 'A title for the necessary cookie group.', 'ilmenite-cookie-consent' ),
+			],
+			'ilcc_settings_necessary_description'       => [
+				'section'     => 'ilmenite_cookie_banner_necessary',
+				'type'        => 'textarea',
+				'label'       => __( 'Necessary Description', 'ilmenite-cookie-consent' ),
+				'description' => __( 'Describes what the necessary cookies are used for.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => 'wp_kses_post',
+			],
+			'ilcc_settings_analytics_is_shown'          => [
+				'section'     => 'ilmenite_cookie_banner_analytics',
+				'type'        => 'checkbox',
+				'default'     => '',
+				'label'       => __( 'Show Analytics Section', 'ilmenite-cookie-consent' ),
+				'description' => __( 'When checked the analytics configuration section is shown. If you have no analytics trackers you can disable this section.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => [ self::class, 'sanitize_checkbox' ],
+			],
+			'ilcc_settings_analytics_heading'           => [
+				'section'     => 'ilmenite_cookie_banner_analytics',
+				'label'       => __( 'Analytics Heading', 'ilmenite-cookie-consent' ),
+				'description' => __( 'A title for the analytics cookie group.', 'ilmenite-cookie-consent' ),
+			],
+			'ilcc_settings_analytics_description'       => [
+				'section'     => 'ilmenite_cookie_banner_analytics',
+				'type'        => 'textarea',
+				'label'       => __( 'Analytics Description', 'ilmenite-cookie-consent' ),
+				'description' => __( 'Describes what the analytics cookies are used for.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => 'wp_kses_post',
+			],
+			'ilcc_settings_marketing_is_shown'          => [
+				'section'     => 'ilmenite_cookie_banner_marketing',
+				'type'        => 'checkbox',
+				'default'     => '',
+				'label'       => __( 'Show Marketing Section', 'ilmenite-cookie-consent' ),
+				'description' => __( 'When checked the marketing configuration section is shown. If you have no marketing trackers you can disable this section.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => [ self::class, 'sanitize_checkbox' ],
+			],
+			'ilcc_settings_marketing_heading'           => [
+				'section'     => 'ilmenite_cookie_banner_marketing',
+				'label'       => __( 'Marketing Heading', 'ilmenite-cookie-consent' ),
+				'description' => __( 'A title for the marketing cookie group.', 'ilmenite-cookie-consent' ),
+			],
+			'ilcc_settings_marketing_description'       => [
+				'section'     => 'ilmenite_cookie_banner_marketing',
+				'type'        => 'textarea',
+				'label'       => __( 'Marketing Description', 'ilmenite-cookie-consent' ),
+				'description' => __( 'Describes what the marketing cookies are used for.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => 'wp_kses_post',
+			],
+			'ilcc_settings_google_consent_mode_enabled' => [
+				'section'     => 'ilmenite_cookie_banner_integrations',
+				'type'        => 'checkbox',
+				'default'     => '',
+				'label'       => __( 'Enable Consent Mode Integration', 'ilmenite-cookie-consent' ),
+				'description' => __( 'When checked the consent given by the user will integrate with Google Consent Mode v2.', 'ilmenite-cookie-consent' ),
+				'sanitize'    => [ self::class, 'sanitize_checkbox' ],
+			],
+			'ilcc_save_settings_text'                   => [
+				'section'     => 'ilmenite_cookie_banner_general',
+				'label'       => __( 'Save Settings Button Text', 'ilmenite-cookie-consent' ),
+				'description' => __( 'The label of the button that lets users save their settings.', 'ilmenite-cookie-consent' ),
+			],
+		];
+	}
+
+	/**
+	 * Get the available banner styles.
+	 *
+	 * @return array
+	 */
+	public static function get_style_choices() {
+		return [
+			'top'      => __( 'Top', 'ilmenite-cookie-consent' ),
+			'overlay'  => __( 'Overlay', 'ilmenite-cookie-consent' ),
+			'takeover' => __( 'Take Over', 'ilmenite-cookie-consent' ),
+		];
+	}
+
+	/**
+	 * Sanitize the banner style.
+	 *
+	 * @param  string  $value
+	 *
+	 * @return string
+	 */
+	public static function sanitize_style( $value ) {
+		return array_key_exists( $value, self::get_style_choices() ) ? $value : self::get_default( 'ilcc_style' );
+	}
+
+	/**
+	 * Sanitize a checkbox value.
+	 *
+	 * @param  mixed  $value
+	 *
+	 * @return string '1' when checked, '' otherwise.
+	 */
+	public static function sanitize_checkbox( $value ) {
+		return ( ! empty( $value ) && 'false' !== $value ) ? '1' : '';
+	}
+
+	/**
+	 * Add settings in the customizer.
 	 *
 	 * @param WP_Customize_Manager $wp_customize
 	 *
@@ -281,364 +509,41 @@ class ILCC_Settings {
 			'description' => __( 'Customize the appearance and texts in the cookie banner, used for EU cookie compliance.', 'ilmenite-cookie-consent' ),
 		] );
 
-		$wp_customize->add_section( 'ilmenite_cookie_banner_style', [
-			'title' => __( 'Style', 'ilmenite-cookie-consent' ),
-			'panel' => 'ilmenite_cookie_banner',
-		] );
+		foreach ( self::get_customizer_sections() as $id => $title ) {
+			$wp_customize->add_section( $id, [
+				'title' => $title,
+				'panel' => 'ilmenite_cookie_banner',
+			] );
+		}
 
-		$wp_customize->add_section( 'ilmenite_cookie_banner_general', [
-			'title' => __( 'General', 'ilmenite-cookie-consent' ),
-			'panel' => 'ilmenite_cookie_banner',
-		] );
+		foreach ( self::get_customizer_fields() as $id => $field ) {
+			$capability = isset( $field['capability'] ) ? $field['capability'] : 'ilcc_edit_button_capability';
 
-		$wp_customize->add_section( 'ilmenite_cookie_banner_necessary', [
-			'title' => __( 'Section: Necessary', 'ilmenite-cookie-consent' ),
-			'panel' => 'ilmenite_cookie_banner',
-		] );
+			$wp_customize->add_setting( $id, [
+				'default'           => array_key_exists( 'default', $field ) ? $field['default'] : self::get_default( $id ),
+				'type'              => 'option',
+				'capability'        => apply_filters( $capability, 'edit_theme_options' ),
+				'sanitize_callback' => isset( $field['sanitize'] ) ? $field['sanitize'] : 'sanitize_text_field',
+			] );
 
-		$wp_customize->add_section( 'ilmenite_cookie_banner_analytics', [
-			'title' => __( 'Section: Analytics', 'ilmenite-cookie-consent' ),
-			'panel' => 'ilmenite_cookie_banner',
-		] );
-
-		$wp_customize->add_section( 'ilmenite_cookie_banner_marketing', [
-			'title' => __( 'Section: Marketing', 'ilmenite-cookie-consent' ),
-			'panel' => 'ilmenite_cookie_banner',
-		] );
-
-		/**
-		 * Style
-		 */
-		$wp_customize->add_setting( 'ilcc_style', [
-			'default'    => 'overlay',
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_style_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_style', [
-			'label'       => __( 'Style', 'ilmenite-cookie-consent' ),
-			'description' => __( 'The banner can appear both at the top, or overlaid at the bottom of the page.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_style',
-			'section'     => 'ilmenite_cookie_banner_style',
-			'priority'    => 80,
-			'type'        => 'radio',
-			'choices'     => [
-				'top'      => __( 'Top', 'ilmenite-cookie-consent' ),
-				'overlay'  => __( 'Overlay', 'ilmenite-cookie-consent' ),
-				'takeover' => __( 'Take Over', 'ilmenite-cookie-consent' ),
-			],
-		] ) );
-
-		/**
-		 * Title
-		 */
-		$wp_customize->add_setting( 'ilcc_title', [
-			'default'    => __( 'This website uses cookies to enhance the browsing experience', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_title_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_title', [
-			'label'       => __( 'Title', 'ilmenite-cookie-consent' ),
-			'description' => __( 'Keep the title short. It is styled prominently.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_title',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Text with link
-		 */
-		$wp_customize->add_setting( 'ilcc_text', [
-			'default'    => __( 'By continuing you give us permission to deploy cookies as per our %linkstart%privacy and cookies policy%linkend%.', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_text_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_text', [
-			'label'       => __( 'Description', 'ilmenite-cookie-consent' ),
-			'description' => __( 'A secondary line of info about your cookie usage. Remember to link to the policy by using the %linkstart% and %linkend% placeholders.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_text',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-			'type'        => 'textarea',
-		] ) );
-
-		/**
-		 * URL setting
-		 */
-		$wp_customize->add_setting( 'ilcc_policy_url', [
-			'default'    => get_privacy_policy_url(),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_policy_url_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_policy_url', [
-			'label'       => __( 'Cookie Policy Link', 'ilmenite-cookie-consent' ),
-			'description' => __( 'Enter a link to your privacy and cookie policy where you outline the use of cookies. If left blank, the privacy policy page from Settings > Privacy will be used.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_policy_url',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Button
-		 */
-		$wp_customize->add_setting( 'ilcc_button', [
-			'default'    => __( 'Allow All Cookies', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_button', [
-			'label'       => __( 'Accept All Button Text', 'ilmenite-cookie-consent' ),
-			'description' => __( 'Displays the message on the call to action button that adds consent for everything.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_button',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Only Necessary Button
-		 */
-		$wp_customize->add_setting( 'ilcc_only_necessary_text', [
-			'default'    => __( 'Only Necessary', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_only_necessary_text', [
-			'label'       => __( 'Only Necessary Cookies Button Text', 'ilmenite-cookie-consent' ),
-			'description' => __( 'A secondary button that displays a call to action where the user can accept only the necessary cookies on the page. This essentially just closes the banner.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_only_necessary_text',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Only Necessary Button
-		 */
-		$wp_customize->add_setting( 'ilcc_configure_settings_text', [
-			'default'    => __( 'Configure Settings', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_configure_settings_text', [
-			'label'       => __( 'Configure Settings Button Text', 'ilmenite-cookie-consent' ),
-			'description' => __( 'A small button/link that the user can click on to open more fine-grained settings.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_configure_settings_text',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Settings Title
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_title', [
-			'default'    => __( 'Select Cookies', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_title', [
-			'label'       => __( 'Settings Title', 'ilmenite-cookie-consent' ),
-			'description' => __( 'The title for the settings selection area.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_title',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Settings Description
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_description', [
-			'default'    => __( 'Cookies are small text files that the web server stores on your computer when you visit the website.', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_description', [
-			'label'       => __( 'Settings Description', 'ilmenite-cookie-consent' ),
-			'description' => __( 'A description to further let people know what cookies are for and why they can select different options.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_description',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Necessary Heading
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_necessary_heading', [
-			'default'    => __( 'Necessary', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_necessary_heading', [
-			'label'       => __( 'Necessary Heading', 'ilmenite-cookie-consent' ),
-			'description' => __( 'A title for the necessary cookie group.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_necessary_heading',
-			'section'     => 'ilmenite_cookie_banner_necessary',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Necessary Text
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_necessary_description', [
-			'default'    => __( 'These cookies cannot be disabled. They are requires for the website to work.', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_necessary_description', [
-			'label'       => __( 'Necessary Description', 'ilmenite-cookie-consent' ),
-			'description' => __( 'Describes what the necessary cookies are used for.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_necessary_description',
-			'section'     => 'ilmenite_cookie_banner_necessary',
-			'priority'    => 80,
-			'type'        => 'textarea',
-		] ) );
-
-		/**
-		 * Show Analytics Section
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_analytics_is_shown', [
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_analytics_is_shown', [
-			'type'        => 'checkbox',
-			'label'       => __( 'Show Analytics Section', 'ilmenite-cookie-consent' ),
-			'description' => __( 'When checked the analytics configuration section is shown. If you have no analytics trackers you can disable this section.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_analytics_is_shown',
-			'section'     => 'ilmenite_cookie_banner_analytics',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Analytics Heading
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_analytics_heading', [
-			'default'    => __( 'Analytics', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_analytics_heading', [
-			'label'       => __( 'Analytics Heading', 'ilmenite-cookie-consent' ),
-			'description' => __( 'A title for the analytics cookie group.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_analytics_heading',
-			'section'     => 'ilmenite_cookie_banner_analytics',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Analytics Text
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_analytics_description', [
-			'default'    => __( 'To be able to improve the website including information and functionality we want to gather analytics. We are not able to identify you personally using this data.', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_analytics_description', [
-			'label'       => __( 'Analytics Description', 'ilmenite-cookie-consent' ),
-			'description' => __( 'Describes what the analytics cookies are used for.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_analytics_description',
-			'section'     => 'ilmenite_cookie_banner_analytics',
-			'priority'    => 80,
-			'type'        => 'textarea',
-		] ) );
-
-		/**
-		 * Show Marketing Section
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_marketing_is_shown', [
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_marketing_is_shown', [
-			'type'        => 'checkbox',
-			'label'       => __( 'Show Marketing Section', 'ilmenite-cookie-consent' ),
-			'description' => __( 'When checked the marketing configuration section is shown. If you have no marketing trackers you can disable this section.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_marketing_is_shown',
-			'section'     => 'ilmenite_cookie_banner_marketing',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Marketing Heading
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_marketing_heading', [
-			'default'    => __( 'Marketing', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_marketing_heading', [
-			'label'       => __( 'Marketing Heading', 'ilmenite-cookie-consent' ),
-			'description' => __( 'A title for the marketing cookie group.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_marketing_heading',
-			'section'     => 'ilmenite_cookie_banner_marketing',
-			'priority'    => 80,
-		] ) );
-
-		/**
-		 * Marketing Text
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_marketing_description', [
-			'default'    => __( 'By sharing your browsing behavior on our website we are able to serve you with personalized content and offers.', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_marketing_description', [
-			'label'       => __( 'Marketing Description', 'ilmenite-cookie-consent' ),
-			'description' => __( 'Describes what the marketing cookies are used for.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_settings_marketing_description',
-			'section'     => 'ilmenite_cookie_banner_marketing',
-			'priority'    => 80,
-			'type'        => 'textarea',
-		] ) );
-
-		/**
-		 * Consent Mode Integration
-		 */
-		$wp_customize->add_setting( 'ilcc_settings_google_consent_mode_enabled', [
-				'type'       => 'option',
-				'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
-
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_settings_google_consent_mode_enabled', [
-				'type'        => 'checkbox',
-				'label'       => __( 'Enable Consent Mode Integration', 'ilmenite-cookie-consent' ),
-				'description' => __( 'When checked the consent given by the user will integrate with Google Consent Mode v2.', 'ilmenite-cookie-consent' ),
-				'settings'    => 'ilcc_settings_google_consent_mode_enabled',
-				'section'     => 'ilmenite_cookie_banner_marketing',
+			$control = [
+				'label'       => $field['label'],
+				'description' => $field['description'],
+				'settings'    => $id,
+				'section'     => $field['section'],
 				'priority'    => 80,
-		] ) );
+			];
 
-		/**
-		 * Save Settings Button Text
-		 */
-		$wp_customize->add_setting( 'ilcc_save_settings_text', [
-			'default'    => __( 'Save Settings', 'ilmenite-cookie-consent' ),
-			'type'       => 'option',
-			'capability' => apply_filters( 'ilcc_edit_button_capability', 'edit_theme_options' ),
-		] );
+			if ( isset( $field['type'] ) ) {
+				$control['type'] = $field['type'];
+			}
 
-		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'ilcc_save_settings_text', [
-			'label'       => __( 'Save Settings Button Text', 'ilmenite-cookie-consent' ),
-			'description' => __( 'The label of the button that lets users save their settings.', 'ilmenite-cookie-consent' ),
-			'settings'    => 'ilcc_save_settings_text',
-			'section'     => 'ilmenite_cookie_banner_general',
-			'priority'    => 80,
-		] ) );
+			if ( isset( $field['choices'] ) ) {
+				$control['choices'] = $field['choices'];
+			}
 
+			$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, $id, $control ) );
+		}
 	}
 
 	public static function integrity_settings() {
@@ -658,7 +563,7 @@ class ILCC_Settings {
 
 		add_settings_section( 'ilcc_trackers_analytics', __( 'Analytics', 'ilmenite-cookie-consent' ), function () {
 			?>
-			<p class="section-lead"><?php esc_html_e( 'Marketing cookies normally track the user behavior either to log in a CRM system or to serve personalized advertising. It is essential for privacy regulation compliance to separate these out and give users an informed choice.', 'ilmenite-cookie-consent' ); ?></p>
+			<p class="section-lead"><?php esc_html_e( 'Analytics cookies measure how visitors use the website, such as which pages they visit and for how long. Many privacy regulations require consent before these are set.', 'ilmenite-cookie-consent' ); ?></p>
 			<?php
 		}, 'ilcc-trackers' );
 
@@ -678,7 +583,7 @@ class ILCC_Settings {
 		add_settings_field( 'ilcc_domains_marketing', __( 'Domains', 'ilmenite-cookie-consent' ), function () {
 			?>
 			<textarea name="ilcc_domains_marketing" id="ilcc_domains_marketing" style="width: 100%; max-width: 35rem;" rows="10"><?php echo esc_html( implode( "\n", ILCC_Trackers::get_marketing() ) ); ?></textarea>
-			<p class="form-description">Enter one domain per line.</p>
+			<p class="form-description"><?php esc_html_e( 'Enter one domain per line.', 'ilmenite-cookie-consent' ); ?></p>
 			<?php
 		}, 'ilcc-trackers', 'ilcc_trackers_marketing' );
 
