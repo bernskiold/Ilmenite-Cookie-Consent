@@ -26,6 +26,9 @@ function isModal() {
 
 export function showBanner() {
 
+	// The banner can be opened again after it was closed (to change consent).
+	isClosingIntentionally = false;
+
 	const consentBlock = document.createElement( isModal() ? "dialog" : "div" );
 	consentBlock.id    = "cookie-consent-block";
 	consentBlock.classList.add( "ilcc-cookie-consent-notice" );
