@@ -9,12 +9,16 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Build Project
         run: |
           npm run release
           mkdir build
           mkdir ${{ github.event.repository.name}}
-          rsync -rv . ${{ github.event.repository.name}} --exclude=${{ github.event.repository.name}} --exclude .git/ --exclude node_modules/ --exclude ".*" --exclude assets/styles/src/ --exclude composer.json --exclude composer.lock --exclude build/ --exclude config/ --exclude CHANGELOG.md --exclude README.md --exclude webpack.mix.js --exclude package.json --exclude package-lock.json --exclude phpstan.neon --exclude mix-manifest.json
+          rsync -rv . ${{ github.event.repository.name}} --exclude=${{ github.event.repository.name}} --exclude .git/ --exclude node_modules/ --exclude ".*" --exclude assets/styles/src/ --exclude composer.json --exclude composer.lock --exclude build/ --exclude config/ --exclude CHANGELOG.md --exclude README.md --exclude webpack.config.js --exclude package.json --exclude package-lock.json --exclude phpstan.neon --exclude phpcs.xml.dist
       - name: Create Artifact
         uses: montudor/action-zip@v1
         with:

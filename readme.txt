@@ -46,7 +46,7 @@ We recommend using the built-in plugin installer in WordPress. If you wish to in
 
 1. Upload `ilmenite-cookie-consent` to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Insert a link to your cookie policy in the 'Settings > Reading' page.
+3. Set the link to your cookie policy under Appearance > Customize > Cookie Banner, or set a privacy policy page under Settings > Privacy.
 
 == Frequently Asked Questions ==
 
