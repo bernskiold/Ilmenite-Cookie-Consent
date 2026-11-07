@@ -38,7 +38,9 @@ export function setConsentedCategories( categories = [] ) {
  * @return {Array} Object of categories.
  */
 export function getConsentedCategories() {
-	return getJsonCookieValue( settings.consentedCategories );
+	const categories = getJsonCookieValue( settings.consentedCategories );
+
+	return Array.isArray( categories ) ? categories : [];
 }
 
 /**

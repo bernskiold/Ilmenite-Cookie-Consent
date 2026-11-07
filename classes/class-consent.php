@@ -12,12 +12,13 @@ class ILCC_Consent {
 	 * @return bool
 	 */
 	public static function has_set_preferences() {
+		$name = Ilmenite_Cookie_Consent::get_preferences_cookie_name();
 
-		if ( ! isset( $_COOKIE[ Ilmenite_Cookie_Consent::get_preferences_cookie_name() ] ) ) {
+		if ( ! isset( $_COOKIE[ $name ] ) || ! is_string( $_COOKIE[ $name ] ) ) {
 			return false;
 		}
 
-		return $_COOKIE[ Ilmenite_Cookie_Consent::get_preferences_cookie_name() ] ? true : false;
+		return '1' === $_COOKIE[ $name ];
 	}
 
 	/**
@@ -37,27 +38,30 @@ class ILCC_Consent {
 	 * @return bool
 	 */
 	public static function has_consented_to( $category ) {
-
-		$categories = self::get_consented_list();
-
-		if ( ! $categories ) {
-			return false;
-		}
-
-		return in_array( $category, $categories, true );
-
+		return in_array( $category, self::get_consented_list(), true );
 	}
 
+	/**
+	 * Get the list of consented categories from the cookie.
+	 *
+	 * Categories only count once the visitor has saved their preferences.
+	 *
+	 * @return string[]
+	 */
 	protected static function get_consented_list() {
+		$name = Ilmenite_Cookie_Consent::get_categories_cookie_name();
 
-		if ( isset( $_COOKIE[ Ilmenite_Cookie_Consent::get_categories_cookie_name() ] ) ) {
-			$value = $_COOKIE[ Ilmenite_Cookie_Consent::get_categories_cookie_name() ];
-			$value = stripslashes( $value );
-
-			return json_decode( $value );
+		if ( ! self::has_set_preferences() || ! isset( $_COOKIE[ $name ] ) || ! is_string( $_COOKIE[ $name ] ) ) {
+			return [];
 		}
 
-		return [];
+		$value = json_decode( wp_unslash( $_COOKIE[ $name ] ), true );
+
+		if ( ! is_array( $value ) ) {
+			return [];
+		}
+
+		return array_values( array_filter( $value, 'is_string' ) );
 	}
 
 	public static function add_consent_mode_defaults() {
