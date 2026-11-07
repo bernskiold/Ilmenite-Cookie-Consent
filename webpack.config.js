@@ -3,17 +3,17 @@
  *
  * Built files keep the paths the plugin enqueues:
  * - assets/scripts/dist/cookie-banner.js         (banner)
- * - assets/scripts/dist/cookie-banner-vendor.js  (script blocker, yett)
+ * - assets/scripts/dist/cookie-banner-blocker.js (script blocker, loaded in the head)
  * - assets/styles/dist/cookie-banner.css         (styles)
  */
 const path = require( 'path' );
-const CopyPlugin = require( 'copy-webpack-plugin' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
 module.exports = {
 	...defaultConfig,
 	entry: {
 		'scripts/dist/cookie-banner': './assets/scripts/src/index.js',
+		'scripts/dist/cookie-banner-blocker': './assets/scripts/src/blocker.js',
 		'styles/dist/cookie-banner': './assets/styles/src/cookie-banner.scss',
 	},
 	output: {
@@ -28,13 +28,5 @@ module.exports = {
 		...defaultConfig.plugins.filter(
 			( plugin ) => ! [ 'CopyPlugin', 'RtlCssPlugin' ].includes( plugin.constructor.name )
 		),
-		new CopyPlugin( {
-			patterns: [
-				{
-					from: require.resolve( 'yett/dist/yett.min.modern.js' ),
-					to: 'scripts/dist/cookie-banner-vendor.js',
-				},
-			],
-		} ),
 	],
 };

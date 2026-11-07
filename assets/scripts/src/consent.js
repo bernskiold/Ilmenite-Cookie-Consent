@@ -99,32 +99,7 @@ export function applyConsent( categories ) {
  * @param {Array} categories
  */
 function unblockCategories( categories ) {
-	if ( ! window.yett ) {
-		return;
-	}
-
-	const patterns = window.ilccBlocker && window.ilccBlocker.patterns;
-
-	if ( ! patterns ) {
-		// Without per-category patterns we can only unblock everything,
-		// so only do that when everything was consented to.
-		if ( categories.includes( "analytics" ) && categories.includes( "marketing" ) ) {
-			window.yett.unblock();
-		}
-
-		return;
-	}
-
-	let toUnblock = [];
-
-	[ "analytics", "marketing" ].forEach( ( category ) => {
-		if ( categories.includes( category ) && patterns[ category ] ) {
-			toUnblock = toUnblock.concat( patterns[ category ] );
-		}
-	} );
-
-	// Calling unblock() without arguments unblocks everything.
-	if ( toUnblock.length > 0 ) {
-		window.yett.unblock( ...toUnblock );
+	if ( window.ilccBlocker && typeof window.ilccBlocker.unblock === "function" ) {
+		window.ilccBlocker.unblock( categories.filter( ( category ) => "necessary" !== category ) );
 	}
 }

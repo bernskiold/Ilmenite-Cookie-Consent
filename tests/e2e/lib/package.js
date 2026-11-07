@@ -29,7 +29,7 @@ function packagePlugin() {
 		execFileSync( 'npm', [ 'run', 'build' ], { cwd: ROOT, stdio: 'inherit' } );
 	}
 
-	for ( const file of [ 'assets/scripts/dist/cookie-banner.js', 'assets/scripts/dist/cookie-banner-vendor.js', 'assets/styles/dist/cookie-banner.css' ] ) {
+	for ( const file of [ 'assets/scripts/dist/cookie-banner.js', 'assets/scripts/dist/cookie-banner-blocker.js', 'assets/styles/dist/cookie-banner.css' ] ) {
 		if ( ! fs.existsSync( path.join( ROOT, file ) ) ) {
 			throw new Error( `Missing build output ${ file }. Run "npm run build".` );
 		}

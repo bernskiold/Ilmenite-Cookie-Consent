@@ -23,7 +23,7 @@ jobs:
       - name: Check built files exist
         run: |
           test -s assets/scripts/dist/cookie-banner.js
-          test -s assets/scripts/dist/cookie-banner-vendor.js
+          test -s assets/scripts/dist/cookie-banner-blocker.js
           test -s assets/styles/dist/cookie-banner.css
 
   php-lint:
