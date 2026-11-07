@@ -115,6 +115,37 @@ Just set their value somewhere in your code, such as in the functions.php file o
 
 `ilcc_is_active_on_page` - Return false to hide the banner from loading. Can be used to prevent the banner from loading on certain pages or templates.
 
+## Development and tests
+
+Requires Node 26 (see `.nvmrc`) and Composer.
+
+```bash
+composer install && npm install
+npm run build   # or `npm run start` to rebuild on changes
+```
+
+The build uses [`@wordpress/scripts`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/) with the small `webpack.config.js` in the root.
+
+There are two test suites, and CI runs both on every pull request.
+
+**PHP unit tests** (`tests/php`) use PHPUnit with [Brain Monkey](https://giuseppe-mazzapica.gitbook.io/brain-monkey/) instead of a WordPress install. `BackCompatTest` pins everything an update must not break: the public methods, filters, actions, cookie names and the options the Customizer stores. If you have to change one of these, add a deprecation path rather than editing the test.
+
+```bash
+composer test
+```
+
+**End-to-end tests** (`tests/e2e`) package the plugin like a release, boot a real WordPress with [WordPress Playground](https://wordpress.github.io/wordpress-playground/) (no Docker or MySQL needed), and drive it in Chromium with Playwright:
+
+- `consent.spec.js` covers a fresh install: blocking, the consent choices, Consent Mode, reopening the settings, cache safety and the admin screens.
+- `upgrade.spec.js` installs the latest release from WordPress.org, saves settings and a visitor's consent with it, and then runs WordPress's automatic updater to update it to this build. It then checks that the plugin is still active, that saved settings and consent still apply, and that no PHP errors occurred.
+
+```bash
+npx playwright install chromium   # once
+npm run test:e2e
+```
+
+Set `WP_VERSION` (for example `5.0` or `latest`) and `PHP_VERSION` (for example `7.4` or `8.4`) to choose the versions. Each run prints the WordPress version it used. The tests need to reach wordpress.org.
+
 ## Translations
 Included in the package are complete translations for the following languages:
 
