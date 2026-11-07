@@ -1,0 +1,74 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Ilmenite Cookie Consent\n"
+"POT-Creation-Date: 2015-08-06 21:59+0200\n"
+"PO-Revision-Date: 2015-08-06 22:21+0200\n"
+"Last-Translator: Peter Šuranský <peter.suransky@gmail.com>\n"
+"Language-Team: Peter Šuranský <peter.suransky@gmail.com>\n"
+"Language: sk_SK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: ilmenite-cookie-consent.php\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: ilmenite-cookie-consent.php:115
+#, php-format
+msgid ""
+"<span>This website uses cookies to enhance the browsing experience. </"
+"span>By continuing you give us permission to deploy cookies as per our <a "
+"href=\"%s\" rel=\"nofollow\">privacy and cookies policy</a>."
+msgstr ""
+"<span> Táto webová stránka používa cookies na zvýšenie možnosti počas "
+"prehliadania. </span>Pokračovaním nám dávate povolenie na nasadenie "
+"cookies, podľa <a href=\"%s\" rel=\"nofollow\"> Zásad pre ochranu súkromia "
+"a používania súborov cookies </a>."
+
+#: ilmenite-cookie-consent.php:116
+msgid "I Understand"
+msgstr "Rozumiem a súhlasím."
+
+#: ilmenite-cookie-consent.php:150
+msgid "Privacy and Cookie Policy URL"
+msgstr "URL Zásad pre ochranu súkromia a používania súborov cookies"
+
+#: ilmenite-cookie-consent.php:157
+msgid ""
+"Enter a link to your privacy and cookie policy where you outline the use of "
+"cookies. This link will be used in the cookie consent banner."
+msgstr ""
+"Zadajte odkaz na dokument kde popisujete zásady ochrany súkromia a politiku "
+"používania súborov cookies . Tento odkaz bude použitý v titulke cookie "
+"banneru."
+
+#. Plugin Name of the plugin/theme
+msgid "Ilmenite Cookie Consent"
+msgstr "Ilmenit Cookie súhlas"
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/bernskioldmedia/Ilmenite-Cookie-Consent"
+msgstr "https://github.com/bernskioldmedia/Ilmenite-Cookie-Consent"
+
+#. Description of the plugin/theme
+msgid ""
+"A simple, developer-friendly WordPress plugin that lets visitors know that "
+"the site is using cookies."
+msgstr ""
+"Jednoduchý, pre vyvojára pohodlný WordPress modul, ktorý informuje "
+"návštevníkov, že stránka používa súbory cookies."
+
+#. Author of the plugin/theme
+msgid "Bernskiold Media"
+msgstr "Bernskiold Media"
+
+#. Author URI of the plugin/theme
+msgid "http://www.bernskioldmedia.com/"
+msgstr "http://www.bernskioldmedia.com/"

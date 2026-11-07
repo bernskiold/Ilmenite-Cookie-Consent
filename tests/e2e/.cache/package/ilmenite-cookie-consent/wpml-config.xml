@@ -1,0 +1,8 @@
+<wpml-config>
+    <admin-texts>
+        <key name="ilcc_policy_url" />
+        <key name="ilcc_title" />
+        <key name="ilcc_text" />
+        <key name="ilcc_button" />
+    </admin-texts>  
+</wpml-config>
