@@ -12,8 +12,11 @@
 	--ilcc-close-button-hover-text: white;
 	--ilcc-settings-background-color: #f9f9f9;
 	--ilcc-settings-border: #eeeeee;
-	--ilcc-toggle-background-color: #e6e6e6;
-	--ilcc-toggle-handle-background-color: #b3b3b3;
+	--ilcc-toggle-background-color: #ffffff;
+	--ilcc-toggle-handle-background-color: #6b6b6b;
+	--ilcc-toggle-border-color: #6b6b6b;
+	--ilcc-toggle-active-background-color: #2e7d4f;
+	--ilcc-toggle-active-handle-background-color: #ffffff;
 	--ilcc-radius: 4px;
 }
 
@@ -35,12 +38,46 @@ body {
 	transition-duration: 1s;
 	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
 
+	// The container receives programmatic focus only, so it needs no focus ring.
+	&:focus {
+		outline: none;
+	}
+
+	// Reset browser defaults when rendered as a <dialog> (takeover style).
+	&:is(dialog) {
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		border: none;
+	}
+
+	// Keep the dialog visible while it fades out after closing.
+	&:is(dialog).is-closed {
+		display: block;
+	}
+
+	&::backdrop {
+		background: transparent;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition-duration: 0s;
+	}
+
 	a {
 		text-decoration: underline;
 		color: var(--ilcc-link-color);
 
 		&:hover {
 			color: var(--ilcc-link-color-hover);
+		}
+	}
+
+	a,
+	button {
+		&:focus-visible {
+			outline: 2px solid var(--ilcc-focus-color, var(--ilcc-text-color));
+			outline-offset: 2px;
 		}
 	}
 }
@@ -58,19 +95,29 @@ body {
 		flex-flow: row;
 	}
 
-	p {
-		font-size: 0.85rem;
-		flex: 1 1 auto;
-		margin: 0;
-		color: var(--ilcc-text-color);
+}
 
-		span {
-			font-weight: bold;
-			display: block;
-			margin-bottom: 0.5em;
-			color: var(--ilcc-text-color);
-		}
-	}
+.ilcc-cookie-consent-notice-text {
+	flex: 1 1 auto;
+}
+
+.ilcc-cookie-consent-title {
+	font-family: inherit;
+	font-size: 0.85rem;
+	font-weight: bold;
+	line-height: inherit;
+	letter-spacing: normal;
+	text-transform: none;
+	display: block;
+	margin: 0 0 0.5em 0;
+	padding: 0;
+	color: var(--ilcc-text-color);
+}
+
+.ilcc-cookie-consent-description {
+	font-size: 0.85rem;
+	margin: 0;
+	color: var(--ilcc-text-color);
 }
 
 .ilcc-cookie-consent-actions {
@@ -88,7 +135,7 @@ body {
 .ilcc-cookie-consent-button {
 	font-size: 0.85rem;
 	font-weight: bold;
-	line-height: 1;
+	line-height: 1.2;
 	display: inline-block;
 	width: 100%;
 	margin: 0 !important;
@@ -98,11 +145,15 @@ body {
 	color: var(--ilcc-close-button-text);
 	border: 1px solid var(--ilcc-close-button);
 	border-radius: var(--ilcc-radius);
-	outline: none;
 	background-color: var(--ilcc-close-button);
-	white-space: nowrap;
+	white-space: normal;
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
 
 	@media screen and (min-width: 768px) {
+		white-space: nowrap;
 		width: auto;
 		max-width: none;
 		flex: 0 1 calc(50% - 1rem);
@@ -127,12 +178,13 @@ body {
 	font-size: 0.75rem;
 	font-weight: bold;
 	display: block;
+	min-height: 24px;
 	margin-top: 0.5rem;
+	padding: 0.25rem 0.5rem;
 	transition: 0.25s opacity ease-in-out;
 	opacity: 0.75;
 	color: var(--ilcc-link-color);
 	border: none;
-	outline: none;
 	background: transparent;
 	flex: 1 1 100%;
 
@@ -151,7 +203,24 @@ body {
 	}
 
 	&::after {
-		content: ' ›';
+		display: inline-block;
+		margin-left: 0.25em;
+		transition: transform 0.25s ease-in-out;
+		content: '›';
+		// Decorative: hide from screen readers where supported.
+		content: '›' / '';
+	}
+
+	&[aria-expanded="true"]::after {
+		transform: rotate(90deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+
+		&::after {
+			transition: none;
+		}
 	}
 }
 
@@ -161,17 +230,24 @@ body {
 	margin-top: 1.5rem;
 	border-top: 1px solid var(--ilcc-settings-border);
 	background-color: var(--ilcc-settings-background-color);
-	transition-property: all;
-	transition-duration: .5s;
-	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+	// Hidden content must not be focusable or read out, so hide it with visibility
+	// once the collapse animation has finished.
+	visibility: hidden;
+	transition: max-height .5s cubic-bezier(0, 1, 0.5, 1), visibility 0s linear .5s;
 
 	@media (prefers-reduced-motion: reduce) {
-		transition-duration: 0s;
+		transition: none;
 	}
 
 	&.is-open {
 		max-height: 50vh;
-		overflow-y: scroll;
+		overflow-y: auto;
+		visibility: visible;
+		transition: max-height .5s cubic-bezier(0, 1, 0.5, 1), visibility 0s linear 0s;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
 	}
 
 	> *:first-child {
@@ -184,8 +260,12 @@ body {
 }
 
 .ilcc-cookie-consent-settings-title {
+	font-family: inherit;
 	font-size: 1.1rem;
 	font-weight: bold;
+	line-height: inherit;
+	letter-spacing: normal;
+	text-transform: none;
 	margin: 0 0 0.5rem 0;
 	padding-right: 2rem;
 	padding-left: 2rem;
@@ -203,19 +283,36 @@ body {
 }
 
 .ilcc-cookie-consent-category {
+	font: inherit;
 	display: flex;
 	align-items: center;
 	flex-flow: row;
 	justify-content: space-between;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
 	padding: 1rem 2rem;
+	cursor: pointer;
+	text-align: left;
 	text-decoration: none !important;
+	text-transform: none;
+	letter-spacing: normal;
 	color: var(--ilcc-text-color);
+	border: none;
 	border-top: 1px solid var(--ilcc-settings-border);
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
 
 	&:hover,
 	&:focus {
 		text-decoration: none;
 		color: var(--ilcc-text-color);
+		background: transparent;
+	}
+
+	.ilcc-cookie-consent-notice &:focus-visible {
+		outline-offset: -4px;
 	}
 
 	&.ilcc-toggle-disabled {
@@ -227,16 +324,18 @@ body {
 	max-width: 30rem;
 
 	strong {
+		display: block;
 		margin-bottom: 0.25rem;
 		color: var(--ilcc-text-color);
 	}
+}
 
-	p {
-		font-size: 0.9rem;
-		margin: 0;
-		opacity: 0.85;
-		color: var(--ilcc-text-color);
-	}
+.ilcc-cookie-consent-category-description {
+	font-size: 0.9rem;
+	display: block;
+	margin: 0;
+	opacity: 0.85;
+	color: var(--ilcc-text-color);
 }
 
 .ilcc-cookie-consent-category-toggle {
@@ -246,25 +345,30 @@ body {
 .ilcc-cookie-consent-toggle {
 	position: relative;
 	display: block;
+	box-sizing: border-box;
 	width: 3.5rem;
 	height: 1.7rem;
+	border: 2px solid var(--ilcc-toggle-border-color);
 	border-radius: 1.5rem;
 	background-color: var(--ilcc-toggle-background-color);
 
-	.ilcc-toggle-active & {
-		background-color: rgba(106, 183, 133, .2);
+	.ilcc-toggle-active &,
+	.ilcc-toggle-disabled & {
+		border-color: var(--ilcc-toggle-active-background-color);
+		background-color: var(--ilcc-toggle-active-background-color);
 	}
 
+	// "Always on" categories look on, but slightly muted to show they can't be changed.
 	.ilcc-toggle-disabled & {
-		background-color: #f4cecd;
+		border-style: dashed;
 	}
 }
 
 .ilcc-cookie-consent-toggle-handle {
 	position: absolute;
-	top: 0.1rem;
+	top: calc(0.1rem - 2px);
 	right: auto;
-	left: 0.1rem;
+	left: calc(0.1rem - 2px);
 	width: 1.5rem;
 	height: 1.5rem;
 	transition: left .25s ease-in-out 0s;
@@ -272,16 +376,15 @@ body {
 	background-color: var(--ilcc-toggle-handle-background-color);
 	backface-visibility: hidden;
 
-	.ilcc-toggle-active &, {
-		right: 0.1rem;
-		left: auto;
-		background-color: #6ab785;
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
 	}
 
+	.ilcc-toggle-active &,
 	.ilcc-toggle-disabled & {
-		right: 0.1rem;
+		right: calc(0.1rem - 2px);
 		left: auto;
-		background-color: #d9534f;
+		background-color: var(--ilcc-toggle-active-handle-background-color);
 	}
 }
 
@@ -301,31 +404,36 @@ body.ilcc-style-top {
 	--ilcc-link-color: #cccccc;
 	--ilcc-link-color-hover: #ffffff;
 	--ilcc-close-button: #ffffff;
-	--ilcc-close-button-hover: #ffffff;
+	--ilcc-close-button-hover: #d9d9d9;
 	--ilcc-close-button-text: #222222;
 	--ilcc-close-button-hover-text: #000000;
 	--ilcc-settings-background-color: #1d1f21;
 	--ilcc-settings-border: #2e3234;
-	--ilcc-toggle-background-color: #e6e6e6;
+	--ilcc-toggle-background-color: transparent;
 	--ilcc-toggle-handle-background-color: #b3b3b3;
+	--ilcc-toggle-border-color: #b3b3b3;
+	--ilcc-toggle-active-background-color: #6ab785;
+	--ilcc-toggle-active-handle-background-color: #1d1f21;
 	transition-property: padding-top;
 	transition-duration: .5s;
 	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
 
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+
 	.ilcc-cookie-consent-notice {
 		position: absolute;
 		top: 0;
+		left: 0;
 		width: 100%;
 		height: auto;
+	}
 
-		p {
-
-			span {
-				@media screen and (min-width: 768px) {
-					font-size: 1rem;
-					margin-bottom: 0;
-				}
-			}
+	.ilcc-cookie-consent-title {
+		@media screen and (min-width: 768px) {
+			font-size: 1rem;
+			margin-bottom: 0;
 		}
 	}
 
@@ -370,15 +478,20 @@ body.ilcc-style-overlay {
 		transform: translateX(-50%);
 		border-radius: var(--ilcc-radius);
 		box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), 1px 2px 5px rgba(0, 0, 0, 0.1);
+		// Let the banner scroll when it is taller than the viewport (e.g. when zoomed in).
+		// Leaves 2rem above and below, accounting for the vertical padding.
+		max-height: calc(100vh - 6rem);
+		max-height: calc(100dvh - 6rem);
+		overflow-y: auto;
+	}
 
-		p {
-			max-width: 40rem;
+	.ilcc-cookie-consent-notice-text {
+		max-width: 40rem;
+	}
 
-			span {
-				font-size: 1rem;
-				margin-bottom: 0.25rem;
-			}
-		}
+	.ilcc-cookie-consent-title {
+		font-size: 1rem;
+		margin-bottom: 0.25rem;
 	}
 
 	.ilcc-cookie-consent-settings {
@@ -403,6 +516,10 @@ body.ilcc-style-takeover {
 		transition-property: opacity;
 		transition-duration: .5s;
 		transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
 	}
 
 	&.ilcc-banner-closed::before {
@@ -412,6 +529,8 @@ body.ilcc-style-takeover {
 	.ilcc-cookie-consent-notice {
 		position: fixed;
 		top: 50%;
+		right: auto;
+		bottom: auto;
 		left: 50%;
 		width: 90%;
 		max-width: 45rem;
@@ -419,18 +538,19 @@ body.ilcc-style-takeover {
 		transform: translate(-50%, -50%);
 		border-radius: var(--ilcc-radius);
 		box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), 1px 2px 5px rgba(0, 0, 0, 0.1);
+		// Let the banner scroll when it is taller than the viewport (e.g. when zoomed in).
+		// Leaves 1rem above and below, accounting for the vertical padding.
+		max-height: calc(100vh - 6rem);
+		max-height: calc(100dvh - 6rem);
+		overflow-y: auto;
 
 		&.is-closed {
 			opacity: 0;
 		}
+	}
 
-		p {
-
-			span {
-				font-size: 1.3rem;
-			}
-		}
-
+	.ilcc-cookie-consent-title {
+		font-size: 1.3rem;
 	}
 
 	.ilcc-cookie-consent-notice-content {
