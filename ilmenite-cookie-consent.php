@@ -191,6 +191,7 @@ class Ilmenite_Cookie_Consent {
 			'rememberDuration'              => self::get_remember_me_duration(),
 			'preferencesCookieName'         => self::get_preferences_cookie_name(),
 			'consentedCategoriesCookieName' => self::get_categories_cookie_name(),
+			'consentVersion'                => self::get_consent_version(),
 			'necessaryHeading'              => ILCC_Settings::get_settings_necessary_heading(),
 			'necessaryDescription'          => ILCC_Settings::get_settings_necessary_description(),
 			'isAnalyticsShown'              => ILCC_Settings::is_analytics_shown() ? '1' : '0',
@@ -322,6 +323,20 @@ class Ilmenite_Cookie_Consent {
 	 */
 	public static function get_categories_cookie_name() {
 		return apply_filters( 'ilcc_categories_cookie_name', 'ilcc_consent_categories' );
+	}
+
+	/**
+	 * Get the consent version.
+	 *
+	 * The version is stored in the preferences cookie. Raise it (for example
+	 * after adding a new tracker or category) to ask every visitor again.
+	 *
+	 * @return string
+	 */
+	public static function get_consent_version() {
+		$version = (string) apply_filters( 'ilcc_consent_version', '1' );
+
+		return '' === $version ? '1' : $version;
 	}
 
 	/**

@@ -175,6 +175,7 @@ class ILCC_Trackers {
 			'trackers'                      => self::get_lists_for_js(),
 			'preferencesCookieName'         => Ilmenite_Cookie_Consent::get_preferences_cookie_name(),
 			'consentedCategoriesCookieName' => Ilmenite_Cookie_Consent::get_categories_cookie_name(),
+			'consentVersion'                => Ilmenite_Cookie_Consent::get_consent_version(),
 		];
 
 		$json = wp_json_encode( $config );
@@ -207,7 +208,7 @@ class ILCC_Trackers {
 	}
 
 	var consented = [];
-	if (readCookie(config.preferencesCookieName) === '1') {
+	if (readCookie(config.preferencesCookieName) === config.consentVersion) {
 		try {
 			var parsed = JSON.parse(readCookie(config.consentedCategoriesCookieName));
 			if (Array.isArray(parsed)) {

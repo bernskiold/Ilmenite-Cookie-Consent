@@ -4,6 +4,16 @@ export const settings = {
 	consentedCategories: ilcc.consentedCategoriesCookieName
 };
 
+/**
+ * The consent version. Stored in the preferences cookie, so that raising
+ * it asks every visitor for consent again.
+ *
+ * @return {string} Version.
+ */
+export function getConsentVersion() {
+	return String( ilcc.consentVersion || "1" );
+}
+
 export function getBannerStyle() {
 	return ilcc.style;
 }
