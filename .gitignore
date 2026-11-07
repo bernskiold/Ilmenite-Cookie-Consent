@@ -54,3 +54,9 @@ assets/styles/dist
 ehthumbs.db
 Thumbs.db
 .idea
+
+# Test output
+tests/e2e/.cache
+test-results
+playwright-report
+.phpunit.result.cache
