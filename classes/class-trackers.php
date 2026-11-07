@@ -165,8 +165,8 @@ class ILCC_Trackers {
 	/**
 	 * Get the inline script that configures the script blocker.
 	 *
-	 * It must run before the blocker (yett) loads. It reads the consent cookie
-	 * in the browser and sets window.YETT_BLACKLIST / window.YETT_WHITELIST.
+	 * Printed just before the blocker (assets/scripts/src/blocker.js), which
+	 * reads the consent cookie in the browser and decides what may run.
 	 *
 	 * @return string
 	 */
@@ -178,68 +178,7 @@ class ILCC_Trackers {
 			'consentVersion'                => Ilmenite_Cookie_Consent::get_consent_version(),
 		];
 
-		$json = wp_json_encode( $config );
-
-		return <<<JS
-(function () {
-	var config = {$json};
-
-	function readCookie(name) {
-		var parts = document.cookie ? document.cookie.split(';') : [];
-		for (var i = 0; i < parts.length; i++) {
-			var part = parts[i].replace(/^\s+/, '');
-			if (part.indexOf(name + '=') === 0) {
-				try {
-					return decodeURIComponent(part.substring(name.length + 1));
-				} catch (e) {
-					return part.substring(name.length + 1);
-				}
-			}
-		}
-		return null;
-	}
-
-	function toPatterns(domains) {
-		var patterns = [];
-		for (var i = 0; i < domains.length; i++) {
-			patterns.push(new RegExp(domains[i].replace(/[.*+?^\${}()|[\]\\\\\/]/g, '\\\\$&')));
-		}
-		return patterns;
-	}
-
-	var consented = [];
-	if (readCookie(config.preferencesCookieName) === config.consentVersion) {
-		try {
-			var parsed = JSON.parse(readCookie(config.consentedCategoriesCookieName));
-			if (Array.isArray(parsed)) {
-				consented = parsed;
-			}
-		} catch (e) {}
-	}
-
-	var patterns = {
-		necessary: toPatterns(config.trackers.necessary),
-		analytics: toPatterns(config.trackers.analytics),
-		marketing: toPatterns(config.trackers.marketing)
-	};
-
-	var blacklist = [];
-	var whitelist = patterns.necessary.slice();
-	['analytics', 'marketing'].forEach(function (category) {
-		if (consented.indexOf(category) !== -1) {
-			whitelist = whitelist.concat(patterns[category]);
-		} else {
-			blacklist = blacklist.concat(patterns[category]);
-		}
-	});
-
-	window.ilccBlocker = { patterns: patterns, consented: consented };
-	window.YETT_BLACKLIST = blacklist;
-	if (whitelist.length) {
-		window.YETT_WHITELIST = whitelist;
-	}
-})();
-JS;
+		return 'window.ilccBlockerConfig = ' . wp_json_encode( $config ) . ';';
 	}
 
 	/**

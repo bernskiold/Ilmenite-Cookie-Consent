@@ -10,10 +10,8 @@ import { updateConsentMode } from "./consent-mode";
 
 log( "=========== COOKIE CONSENT DEBUGGING ===========" );
 
-logInfo( "Blacklisted Domains" );
-logInfo( window.YETT_BLACKLIST );
-logInfo( "Whitelisted Domains" );
-logInfo( window.YETT_WHITELIST );
+logInfo( "Blocked tracker patterns per category" );
+logInfo( window.ilccBlocker && window.ilccBlocker.patterns );
 
 /**
  * Show the banner and wire up its buttons.

@@ -79,6 +79,39 @@ Just set their value somewhere in your code, such as in the functions.php file o
 
     add_filter( 'ilcc_accept_text', 'ilcc_modify_accept_text' );
 
+### Blocking trackers
+
+Domains in **Settings → Tracker Control** are grouped into necessary, analytics and marketing. Until a visitor consents to a category, nothing from its domains loads.
+
+**The plugin rewrites tracker tags on the server.** Browsers start downloading `<script src>`, `<iframe>`, `<img>` and preload URLs from the HTML before any JavaScript can run. Those requests carry and set third-party cookies. So any tag that points at an analytics or marketing domain is rewritten into inert markup before the page is sent. The rewrite is the same for every visitor, so pages stay cache-safe, and the script blocker restores the tags the visitor has consented to:
+
+| In the page | Sent to the browser |
+|---|---|
+| `<script src="…">` | `<script type="text/plain" data-ilcc-category="analytics" src="…">` |
+| `<iframe src="…">`, `<img src="…">` | `data-src="…" data-ilcc-category="…"` |
+| `<link rel="preload" href="…">` | `data-href="…" data-ilcc-category="…"` |
+
+Scripts that other scripts add later, for example with `document.createElement`, are blocked in the browser before they are requested.
+
+**You can write the opt-in markup yourself**, for content that isn't on a listed domain:
+
+```html
+<script type="text/plain" data-ilcc-category="marketing" src="https://example.com/pixel.js"></script>
+<script type="text/plain" data-ilcc-category="analytics">/* inline code */</script>
+<iframe data-ilcc-category="marketing" data-src="https://www.youtube.com/embed/…"></iframe>
+```
+
+Add `data-ilcc-ignore` to a tag to keep the plugin from touching it. To turn the server-side rewrite off completely, return `false` from `ilcc_rewrite_tracker_tags`.
+
+**From JavaScript**, use:
+
+- `window.ilccConsent`: `openSettings()`, `hasConsent( category )` and `getCategories()`
+- `window.ilccBlocker`: `isBlocked( url )` and `unblock( categories )`
+
+`window.yett.unblock()` still works for older custom code.
+
+**Withdrawn consent:** when a visitor withdraws consent, the page reloads so the trackers stop. Cookies those trackers already set stay in the browser until they expire.
+
 ### List of Actions
 
 `ilcc_loaded` - Runs on constructor.
@@ -114,6 +147,8 @@ Just set their value somewhere in your code, such as in the functions.php file o
 `ilcc_tracker_settings_enabled` - Return false to disable the tracker customization settings screen.
 
 `ilcc_is_active_on_page` - Return false to hide the banner from loading. Can be used to prevent the banner from loading on certain pages or templates.
+
+`ilcc_rewrite_tracker_tags` - Return false to stop the plugin from rewriting tracker tags on the server. Trackers are then only blocked in the browser, which can't stop the browser's early downloads.
 
 ## Development and tests
 

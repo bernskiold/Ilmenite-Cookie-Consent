@@ -128,6 +128,7 @@ class Ilmenite_Cookie_Consent {
 		ILCC_Settings::hooks();
 		ILCC_Consent::hooks();
 		ILCC_Trackers::hooks();
+		ILCC_Blocker::hooks();
 
 		do_action( 'ilcc_init' );
 	}
@@ -138,6 +139,7 @@ class Ilmenite_Cookie_Consent {
 	public function classes() {
 		require_once 'classes/class-consent.php';
 		require_once 'classes/class-trackers.php';
+		require_once 'classes/class-blocker.php';
 		require_once 'classes/class-settings.php';
 	}
 
@@ -174,7 +176,10 @@ class Ilmenite_Cookie_Consent {
 
 		wp_register_script( 'ilmenite-cookie-consent', $this->plugin_url . '/assets/scripts/dist/cookie-banner.js', [ 'ilcc-vendor' ], $this->version, true );
 
-		wp_register_script( 'ilcc-vendor', $this->plugin_url . '/assets/scripts/dist/cookie-banner-vendor.js', [], $this->version, false );
+		// The script blocker. It must load in the head, before any tracker. The
+		// handle predates it (it used to be the yett vendor file) and is kept for
+		// sites that reference it.
+		wp_register_script( 'ilcc-vendor', $this->plugin_url . '/assets/scripts/dist/cookie-banner-blocker.js', [], $this->version, false );
 
 		/**
 		 * We localize the script to add our texts.
