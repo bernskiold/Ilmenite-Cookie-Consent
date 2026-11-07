@@ -18,11 +18,11 @@
 .stylelintignore
 .stylelintrc
 .travis.yml
-mix-manifest.json
 phpcs.xml
 phpcs.xml.dist
 phpunit.xml.dist
-webpack.mix.js
+webpack.config.js
+.nvmrc
 README.md
 composer.json
 composer.lock

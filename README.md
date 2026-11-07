@@ -117,10 +117,14 @@ Just set their value somewhere in your code, such as in the functions.php file o
 
 ## Development and tests
 
+Requires Node 26 (see `.nvmrc`) and Composer.
+
 ```bash
 composer install && npm install
-npm run production
+npm run build   # or `npm run start` to rebuild on changes
 ```
+
+The build uses [`@wordpress/scripts`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/) with the small `webpack.config.js` in the root.
 
 There are two test suites, and CI runs both on every pull request.
 

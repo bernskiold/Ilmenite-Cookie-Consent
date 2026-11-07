@@ -26,12 +26,12 @@ function distIgnore() {
 
 function packagePlugin() {
 	if ( ! process.env.ILCC_SKIP_BUILD ) {
-		execFileSync( 'npm', [ 'run', 'production' ], { cwd: ROOT, stdio: 'inherit' } );
+		execFileSync( 'npm', [ 'run', 'build' ], { cwd: ROOT, stdio: 'inherit' } );
 	}
 
 	for ( const file of [ 'assets/scripts/dist/cookie-banner.js', 'assets/scripts/dist/cookie-banner-vendor.js', 'assets/styles/dist/cookie-banner.css' ] ) {
 		if ( ! fs.existsSync( path.join( ROOT, file ) ) ) {
-			throw new Error( `Missing build output ${ file }. Run "npm run production".` );
+			throw new Error( `Missing build output ${ file }. Run "npm run build".` );
 		}
 	}
 

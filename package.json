@@ -4,13 +4,15 @@
   "description": "A simple developer-friendly WordPress plugin to let your visitors know that your site uses cookies.",
   "main": "assets/scripts/src/index.js",
   "scripts": {
-    "release": "npm install && composer install --no-dev -o && npm run production",
-    "setup": "composer install && npm install && npm run development",
-    "development": "mix",
-    "watch": "mix watch",
-    "production": "mix --production",
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "production": "npm run build",
+    "release": "npm ci && composer install --no-dev -o && npm run build",
+    "setup": "composer install && npm install && npm run build",
+    "lint:js": "wp-scripts lint-js assets/scripts/src",
+    "lint:css": "wp-scripts lint-style \"assets/styles/src/**/*.scss\"",
     "i18n": "npm run i18n:pot",
-    "i18n:pot": "npm run build && wp i18n make-pot . ./languages/ilmenite-cookie-consent.pot --include=\"dist/,src/,blocks/*.json,\"",
+    "i18n:pot": "npm run build && wp i18n make-pot . ./languages/ilmenite-cookie-consent.pot --exclude=node_modules,vendor,tests",
     "test": "npm run test:php && npm run test:e2e",
     "test:php": "composer test",
     "test:e2e": "playwright test --config tests/e2e/playwright.config.js"
@@ -39,16 +41,21 @@
   "homepage": "https://github.com/bernskiold/Ilmenite-Cookie-Consent#readme",
   "devDependencies": {
     "@playwright/test": "1.63.0",
+    "@wordpress/scripts": "^37.1.0",
     "@wp-playground/cli": "3.1.62",
-    "laravel-mix": "^6.0.41",
-    "postcss-preset-env": "^7.2",
-    "sass": "^1.107.0",
-    "sass-loader": "^12.4.0"
+    "sass": "^1.107.0"
   },
   "dependencies": {
     "yett": "^0.2.3"
   },
-  "overrides": {
-    "webpackbar": "^7.0.0"
+  "allowScripts": {
+    "@parcel/watcher": false,
+    "core-js": false,
+    "core-js-pure": false,
+    "fs-ext-extra-prebuilt": false
+  },
+  "engines": {
+    "node": ">=26",
+    "npm": ">=11"
   }
 }
