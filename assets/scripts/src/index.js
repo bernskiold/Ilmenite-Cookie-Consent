@@ -1,12 +1,12 @@
 /**
  * Internal dependencies
  */
-import { removeBanner, showBanner, toggleCategory, toggleSettings } from "./banner";
-import { hasConsentedTo, hasUserSetPreferences, setConsentedCategories, setHasSetPreferences } from "./consent";
+import { getSelectedCategories, removeBanner, showBanner, toggleCategory, toggleSettings } from "./banner";
+import { applyConsent, hasConsentedTo, hasUserSetPreferences } from "./consent";
 import { getJsonCookieValue } from "./cookies";
 import { log, logDebug, logInfo } from "./log";
 import { getBannerStyle, hasMatomo, isConfigurable, isDebugging, settings } from "./settings";
-import { isConsentModeEnabled, grantConsent } from "./consent-mode";
+import { updateConsentMode } from "./consent-mode";
 
 log( "=========== COOKIE CONSENT DEBUGGING ===========" );
 
@@ -28,10 +28,7 @@ if ( hasUserSetPreferences() ) {
 		_paq.push( [ "setCookieConsentGiven" ] );
 	}
 
-	if(isConsentModeEnabled() && hasConsentedTo('marketing')) {
-		grantConsent();
-	}
-
+	updateConsentMode();
 } else {
 	logDebug( "❌ User has not expressed consent." );
 	document.body.classList.add( "has-ilcc-banner" );
@@ -43,31 +40,27 @@ if ( isDebugging() ) {
 	document.body.classList.add( "ilcc-is-debugging" );
 }
 
+/**
+ * Save the choice, apply it and close the banner.
+ *
+ * @param {Array} categories
+ */
+function saveChoice( categories ) {
+	applyConsent( categories );
+	removeBanner();
+	document.body.classList.add( "has-ilcc-consented" );
+}
+
 if ( document.querySelector( ".js--ilcc-cookie-consent-notice" ) ) {
 	document.querySelector( ".js--ilcc-cookie-consent-close" ).addEventListener( "click", function( e ) {
 		e.preventDefault();
-
-		window.yett.unblock();
-
-		removeBanner();
-		setHasSetPreferences();
-		setConsentedCategories( [
-			"necessary",
-			"marketing",
-			"analytics"
-		] );
-		grantConsent();
+		saveChoice( [ "necessary", "analytics", "marketing" ] );
 	} );
 
 	if ( isConfigurable() ) {
 		document.querySelector( ".js--ilcc-cookie-consent-necessary" ).addEventListener( "click", function( e ) {
 			e.preventDefault();
-
-			removeBanner();
-			setHasSetPreferences();
-			setConsentedCategories( [
-				"necessary"
-			] );
+			saveChoice( [ "necessary" ] );
 		} );
 
 		document.querySelector( ".js--ilcc-cookie-consent-settings-toggle" ).addEventListener( "click", function( e ) {
@@ -77,8 +70,7 @@ if ( document.querySelector( ".js--ilcc-cookie-consent-notice" ) ) {
 
 		document.querySelector( ".js--ilcc-cookie-consent-settings-save-button" ).addEventListener( "click", function( e ) {
 			e.preventDefault();
-			setHasSetPreferences();
-			removeBanner();
+			saveChoice( getSelectedCategories() );
 		} );
 
 		document.querySelectorAll( ".js--ilcc-cookie-consent-toggle" ).forEach( ( toggle ) => {

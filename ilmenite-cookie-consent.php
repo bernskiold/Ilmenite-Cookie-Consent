@@ -212,11 +212,6 @@ class Ilmenite_Cookie_Consent {
 		 */
 		wp_add_inline_script( 'ilcc-vendor', ILCC_Trackers::get_blocker_script(), 'before' );
 
-		/**
-		 * Add consent mode defaults.
-		 */
-		wp_add_inline_script('ilmenite-cookie-consent', ILCC_Consent::add_consent_mode_defaults(), 'before');
-
 		// Finally, enqueue!
 		wp_enqueue_script( 'ilcc-vendor' );
 		wp_enqueue_script( 'ilmenite-cookie-consent' );

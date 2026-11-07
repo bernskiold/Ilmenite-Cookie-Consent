@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { addConsentedCategory, hasConsentedTo, removeConsentedCategory } from "./consent";
+import { hasConsentedTo } from "./consent";
 import { getBannerStyle, isAnalyticsShown, isConfigurable, isMarketingShown } from "./settings";
 
 const TITLE_ID       = "ilcc-cookie-consent-title";
@@ -257,18 +257,31 @@ function renderCategory( category, heading, description, alwaysOn = false ) {
 			</button>`;
 }
 
+/**
+ * Toggle a category in the settings panel.
+ *
+ * This only changes the toggle. Nothing is stored until the visitor saves.
+ *
+ * @param {HTMLElement} element
+ */
 export function toggleCategory( element ) {
-	const category = element.dataset.category;
+	const isActive = element.classList.toggle( "ilcc-toggle-active" );
+	element.setAttribute( "aria-checked", isActive ? "true" : "false" );
+}
 
-	if ( element.classList.contains( "ilcc-toggle-active" ) ) {
-		removeConsentedCategory( category );
-		element.classList.remove( "ilcc-toggle-active" );
-		element.setAttribute( "aria-checked", "false" );
-	} else {
-		addConsentedCategory( category );
-		element.classList.add( "ilcc-toggle-active" );
-		element.setAttribute( "aria-checked", "true" );
-	}
+/**
+ * Get the categories that are switched on in the settings panel.
+ *
+ * @return {Array} Category names.
+ */
+export function getSelectedCategories() {
+	const selected = [ "necessary" ];
+
+	document.querySelectorAll( ".js--ilcc-cookie-consent-toggle.ilcc-toggle-active" ).forEach( ( toggle ) => {
+		selected.push( toggle.dataset.category );
+	} );
+
+	return selected;
 }
 
 function maybeRemoveClass( element, className ) {
