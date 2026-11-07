@@ -35,10 +35,28 @@ Additionally, for quick theming to your theme's custom colors, we support a seri
 		--ilcc-close-button-hover-text: white;
 		--ilcc-settings-background-color: #f9f9f9;
 		--ilcc-settings-border: #eeeeee;
-		--ilcc-toggle-background-color: #e6e6e6;
-		--ilcc-toggle-handle-background-color: #b3b3b3;
+		--ilcc-toggle-background-color: #ffffff;
+		--ilcc-toggle-handle-background-color: #6b6b6b;
+		--ilcc-toggle-border-color: #6b6b6b;
+		--ilcc-toggle-active-background-color: #2e7d4f;
+		--ilcc-toggle-active-handle-background-color: #ffffff;
+		--ilcc-focus-color: #1e1e1e; /* Defaults to --ilcc-text-color. */
 		--ilcc-radius: 4px;
     }
+
+When changing colors, keep text at a contrast of at least 4.5:1 against the background, and toggle parts and focus outlines at least 3:1, so the banner stays accessible.
+
+### Accessibility
+The banner is built to meet WCAG 2.2 AA:
+
+- It is inserted first in the page, so it comes first in reading and keyboard order. The overlay and top styles are a labelled region. The takeover style is a modal dialog: the rest of the page cannot be reached until the visitor makes a choice, and Escape does not dismiss it.
+- Category toggles are switches that work with the keyboard (Space and Enter) and announce whether they are on or off.
+- The settings panel announces whether it is expanded, and Escape closes it.
+- After a choice is made, focus moves to the start of the page.
+- All controls have a visible focus outline, and the banner scrolls when it is taller than the screen, for example when zoomed in.
+- Animations are turned off for visitors who prefer reduced motion.
+
+If you replace the default stylesheet, keep the collapsed settings panel hidden with `visibility: hidden` or `display: none` so its controls can't be focused while closed.
 
 If you would like to add your own style in addition to the three offered, you can override the style setting with the `ilcc_style` filter. This would let you style outside the three core positions.
 
