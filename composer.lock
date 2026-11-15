@@ -1102,16 +1102,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.56",
+            "version": "8.5.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "951b085c397146e9811b736f21eea53109aefcc0"
+                "reference": "6f1ab9ab0f98efe77efb4c77cd6df7e5eb6615fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/951b085c397146e9811b736f21eea53109aefcc0",
-                "reference": "951b085c397146e9811b736f21eea53109aefcc0",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6f1ab9ab0f98efe77efb4c77cd6df7e5eb6615fc",
+                "reference": "6f1ab9ab0f98efe77efb4c77cd6df7e5eb6615fc",
                 "shasum": ""
             },
             "require": {
@@ -1180,7 +1180,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.56"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.57"
             },
             "funding": [
                 {
@@ -1188,7 +1188,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-05T05:42:27+00:00"
+            "time": "2026-11-12T14:32:26+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2171,5 +2171,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
