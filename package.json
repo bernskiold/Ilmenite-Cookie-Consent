@@ -40,10 +40,10 @@
   },
   "homepage": "https://github.com/bernskiold/Ilmenite-Cookie-Consent#readme",
   "devDependencies": {
-    "@playwright/test": "1.64.1",
+    "@playwright/test": "1.65.0",
     "@wordpress/scripts": "^37.1.0",
-    "@wp-playground/cli": "3.1.62",
-    "sass": "^1.107.1"
+    "@wp-playground/cli": "3.1.64",
+    "sass": "^1.108.2"
   },
   "allowScripts": {
     "@parcel/watcher": false,
